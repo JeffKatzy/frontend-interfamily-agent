@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { IconArrowUp } from '@/components/ui/icons';
 import  Link from "next/link";
 import AboutCard from "@/components/cards/aboutcard";
-export const maxDuration = 80;
+
 import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 export default function Chat() {
   const [messages, setMessages] = useState<CoreMessage[]>([]);
@@ -23,17 +23,20 @@ export default function Chat() {
       { content: input, role: 'user' },
     ];
     setMessages(newMessages);
+    let userInput = input;
     setInput('');
     
-    handleStream();
+    handleStream(userInput);
   }
-  const handleStream = async () => {
+
+  const handleStream = async (userInput: string) => {
     try {
         const response = await fetch("http://127.0.0.1:5000/answer", {
             headers: {
-              "Content-Type": "text/event-stream",
+              'Content-Type': 'application/json',
             },
-            method: "GET",
+            method: "POST",
+            body: JSON.stringify({message: userInput }),
             cache: "no-store",
       });
       const reader = response.body?.getReader();
@@ -46,12 +49,14 @@ export default function Chat() {
       }
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === "event") {
-          const data = event.data;
+          let data = event.data;
+          if (data.includes('[DONE]')) {
+            data = data.replace('[DONE]', '');
+          }
           try {
             setMessages(prevMessages => {
               const lastMessage = prevMessages[prevMessages.length - 1];
               if (lastMessage && lastMessage.role === 'assistant') {
-                // Update the last message if it's from the assistant
                 const updatedMessages = [...prevMessages];
                 updatedMessages[updatedMessages.length - 1] = {
                   ...lastMessage,
@@ -63,7 +68,7 @@ export default function Chat() {
                 return [...prevMessages, { role: 'assistant', content: data }];
               }
             });
-            console.log(data); // Log the new chunk of data
+            
           } catch (e) {
             console.error(e);
           }
@@ -76,7 +81,7 @@ export default function Chat() {
         while (true) {
           const { done, value } = await reader.read()
           const chunk = decoder.decode(value, { stream: true })
-          if (done || chunk.includes('[DONE]')) {
+          if (done) {
             break;
           }
           parser.feed(chunk);
