@@ -3,15 +3,15 @@
 import { Card } from "@/components/ui/card"
 import { type CoreMessage } from 'ai';
 import { useState } from 'react';
-import { continueTextConversation } from '@/app/actions';
+import { runThread, continueTextConversation } from '@/app/actions';
 import { readStreamableValue } from 'ai/rsc';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { IconArrowUp } from '@/components/ui/icons';
 import  Link from "next/link";
 import AboutCard from "@/components/cards/aboutcard";
-export const maxDuration = 30;
-
+export const maxDuration = 80;
+import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 export default function Chat() {
   const [messages, setMessages] = useState<CoreMessage[]>([]);
   const [input, setInput] = useState<string>('');  
@@ -24,15 +24,68 @@ export default function Chat() {
     ];
     setMessages(newMessages);
     setInput('');
-    const result = await continueTextConversation(newMessages);
-    for await (const content of readStreamableValue(result)) {
-      setMessages([
-        ...newMessages,
-        {
-          role: 'assistant',
-          content: content as string, 
-        },
-      ]);
+    
+    handleStream();
+  }
+  const handleStream = async () => {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/answer", {
+            headers: {
+              "Content-Type": "text/event-stream",
+            },
+            method: "GET",
+            cache: "no-store",
+      });
+      const reader = response.body?.getReader();
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const data = response.body;
+      if (!data) {
+        return;
+      }
+      const onParse = (event: ParsedEvent | ReconnectInterval) => {
+        if (event.type === "event") {
+          const data = event.data;
+          try {
+            setMessages(prevMessages => {
+              const lastMessage = prevMessages[prevMessages.length - 1];
+              if (lastMessage && lastMessage.role === 'assistant') {
+                // Update the last message if it's from the assistant
+                const updatedMessages = [...prevMessages];
+                updatedMessages[updatedMessages.length - 1] = {
+                  ...lastMessage,
+                  content: lastMessage.content + data,
+                };
+                return updatedMessages;
+              } else {
+                // Add a new message if the last one isn't from the assistant
+                return [...prevMessages, { role: 'assistant', content: data }];
+              }
+            });
+            console.log(data); // Log the new chunk of data
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      };
+      const parser = createParser(onParse);
+      if (reader) {
+        const decoder = new TextDecoder()
+        
+        while (true) {
+          const { done, value } = await reader.read()
+          const chunk = decoder.decode(value, { stream: true })
+          if (done || chunk.includes('[DONE]')) {
+            break;
+          }
+          parser.feed(chunk);
+        }
+      }
+    } catch (error) {
+      console.error('Error streaming data:', error)
+    } finally {
+      return; //update this setIsStreaming(false)
     }
   }
   
