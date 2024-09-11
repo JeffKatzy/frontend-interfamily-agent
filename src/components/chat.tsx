@@ -3,19 +3,18 @@
 import { Card } from "@/components/ui/card"
 import { type CoreMessage } from 'ai';
 import { useState } from 'react';
-import { runThread, continueTextConversation } from '@/app/actions';
-import { readStreamableValue } from 'ai/rsc';
+import ReactMarkdown from 'react-markdown';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { IconArrowUp } from '@/components/ui/icons';
 import  Link from "next/link";
 import AboutCard from "@/components/cards/aboutcard";
-
 import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 export default function Chat() {
   const [messages, setMessages] = useState<CoreMessage[]>([]);
   const [input, setInput] = useState<string>('');  
 
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const newMessages: CoreMessage[] = [
@@ -31,7 +30,7 @@ export default function Chat() {
 
   const handleStream = async (userInput: string) => {
     try {
-        const response = await fetch("http://127.0.0.1:5000/answer", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_FLASK_API_URL}/answer`, {
             headers: {
               'Content-Type': 'application/json',
             },
@@ -64,7 +63,6 @@ export default function Chat() {
                 };
                 return updatedMessages;
               } else {
-                // Add a new message if the last one isn't from the assistant
                 return [...prevMessages, { role: 'assistant', content: data }];
               }
             });
@@ -104,7 +102,7 @@ export default function Chat() {
           {messages.map((message, index) => (
             <div key={index} className="whitespace-pre-wrap flex mb-5">
               <div className={`${message.role === 'user' ? 'bg-slate-200 ml-auto' : 'bg-transparent'} p-2 rounded-lg`}>
-                {message.content as string}
+              <ReactMarkdown>{message.content as string}</ReactMarkdown>
               </div>
             </div>
           ))}
