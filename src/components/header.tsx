@@ -4,30 +4,24 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { IconSeparator, IconVercel } from '@/components/ui/icons'
 import EnvCard from './cards/envcard'
+import { Button } from '@/components/ui/button'
 
-export async function Header() {
+
+export function Header() {
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between w-full h-16 px-4 border-b shrink-0 bg-white ">  
-      <EnvCard />
-      <Link href="/" rel="nofollow" className="mr-2 font-bold">
-        Next.js AI Lite
-      </Link>
-      <IconSeparator />
-      <Link
-        href="/genui"
-        className={cn(buttonVariants({ variant: 'link' }), "mr-auto font-normal")}
-      >
-        <span className="hidden md:flex">GenUI</span>
-      </Link>
-      <Link
-        href="https://vercel.com/new"
-        target="_blank"
-        className={cn(buttonVariants())}
-      >
-        <IconVercel className="mr-2" />
-        <span className="hidden sm:block">Deploy to Vercel</span>
-        <span className="sm:hidden">Deploy</span>
-      </Link>
+    <header className="sticky top-0 z-50 flex items-center justify-between w-full h-16 px-4 shrink-0 bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl">
+      <div className="flex items-center">
+        <React.Suspense fallback={<div className="flex-1 overflow-auto" />}>
+        <Link href="/new" rel="nofollow">
+          <img className="size-6" src="/nature.svg" alt="IFS logo" />
+        </Link>
+        
+        <Button variant="link" asChild className="-ml-2">
+            <Link href="/">IFS Chatbot</Link>
+          </Button>
+        </React.Suspense>
+      </div>
+      <div className="flex items-center justify-end gap-2"></div>
     </header>
   )
 }
