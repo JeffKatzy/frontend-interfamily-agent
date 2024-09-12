@@ -1,6 +1,6 @@
 # IFS Frontend
 
-This is the frontend for the IFS project. It is built with Next.js and Tailwind CSS.
+This is the frontend for [Interfamily Agent](https://github.com/JeffKatzy/interfamily-agent). It is built with Next.js and Tailwind CSS.
 
 ## Getting Started
 
