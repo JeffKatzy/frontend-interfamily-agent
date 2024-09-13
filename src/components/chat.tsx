@@ -1,22 +1,31 @@
 'use client';
 import Textarea from 'react-textarea-autosize'
-
+import { CIcon } from '@coreui/icons-react';
+import { cilMicrophone } from '@coreui/icons';
 import { type CoreMessage } from 'ai';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { FooterText } from '@/components/footer'
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { IconArrowUp, IconPlus } from '@/components/ui/icons';
+import { IconMic, IconPlus } from '@/components/ui/icons';
 import  Link from "next/link";
-import AboutCard from "@/components/cards/aboutcard";
+import { useSpeechRecognition } from '@/lib/hooks/audio-recording';
 import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 import { useChat } from './ChatProvider';
+// import { useAudio } from '@/components/AudioProvider';
 import { EmptyScreen } from '@/components/emptyScreen';
+import { useAudio } from '@/lib/hooks/audio-tools';
 
 export default function Chat() {
   const { messages, input, setInput, handleSubmit, handleKeyDown } = useChat();
-  
+  const { startRecognition } = useSpeechRecognition();
+  const { checkWebkitAndMicPermission } = useAudio();
+
+  useEffect(() => {
+    checkWebkitAndMicPermission();
+  }, []);
+
   return (    
     <div className="group w-full overflow-auto ">
       {messages.length <= 0 ? ( 
@@ -34,28 +43,34 @@ export default function Chat() {
         </div>
       )}
       <div className="fixed inset-x-0 bottom-10 w-full ">
+      
         <div className="w-full max-w-xl mx-auto">
           <form onSubmit={handleSubmit}>
             <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-zinc-100 px-12 sm:rounded-full sm:px-12">  
             <Button variant="outline" size="icon" className="absolute left-4 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4">
-              <IconPlus />
+            <IconPlus />
               <span className="sr-only">New Chat</span>
             </Button>
+            <Button 
+              variant="outline" 
+              type="button"
+              size="icon" 
+              className="absolute right-4 top-[14px] size-10 rounded-full bg-violet-500 hover:bg-violet-600 p-0 sm:right-4"
+              title="Click to start voice input"
+              onClick={startRecognition}
+            >
+              <IconMic />
+              <span className="sr-only">Start voice input</span>
+            </Button>
+            
             <Textarea tabIndex={0} placeholder="Send a message."
               className="min-h-[60px] w-full bg-transparent placeholder:text-zinc-900 resize-none px-4 py-[1.3rem] focus-within:outline-none sm:text-sm" autoFocus spellCheck={false} autoComplete="off" autoCorrect="off" name="message" rows={1} value={input}
               onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} />
             </div>
-            {messages.length > 1 && (
-              <div className="text-center">
-                <Link href="/genui" className="text-xs text-blue-400">Try GenUI and streaming components &rarr;</Link>
-              </div>
-            )}
           </form>
         </div>
       </div>
       
     </div>
-
-    
   );
 }

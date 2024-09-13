@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AudioProvider } from '@/components/AudioProvider';
 import "./globals.css";
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
@@ -30,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={cn(
           'font-sans antialiased',
           GeistSans.variable,
@@ -39,9 +40,11 @@ export default function RootLayout({
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Header />
         <main className="flex h-100vh flex-1 flex-col">
+        <AudioProvider>
         <ChatProvider>
           {children}
         </ChatProvider>
+        </AudioProvider>
         </main>
         </ThemeProvider>
       </body>

@@ -16,6 +16,7 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [messages, setMessages] = useState<CoreMessage[]>([]);
   const [input, setInput] = useState<string>('');
+  
 
   const handleKeyDown = (e: React.KeyboardEvent): Promise<void> => {
     if (e.key === 'Enter') {
