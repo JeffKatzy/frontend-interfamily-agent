@@ -10,12 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { IconMic, IconPlus } from '@/components/ui/icons';
 import  Link from "next/link";
-import { useSpeechRecognition } from '@/lib/hooks/audio-recording';
+import { useSpeechRecognition } from '@/lib/hooks/recordAudio';
 import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
-import { useChat } from './ChatProvider';
-// import { useAudio } from '@/components/AudioProvider';
+import { useChat } from './providers/ChatProvider';
+
 import { EmptyScreen } from '@/components/emptyScreen';
-import { useAudio } from '@/lib/hooks/audio-tools';
+import { useAudio } from '@/lib/hooks/getAudioPermissions';
 
 export default function Chat() {
   const { messages, input, setInput, handleSubmit, handleKeyDown } = useChat();

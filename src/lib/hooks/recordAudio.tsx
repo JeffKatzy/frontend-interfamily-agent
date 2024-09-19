@@ -21,26 +21,21 @@ export const useSpeechRecognition = () => {
       const webKitRecognition = new window.webkitSpeechRecognition();
       webKitRecognition.lang = "en-US";
 
-      webKitRecognition.onresult = (event: any) => {
-        if (event.results.length > 0) {
-          const lastResult = event.results[event.results.length - 1];
-          if (lastResult.isFinal) {
-            let transcript = lastResult[0].transcript
-            console.log(transcript)
-          }
-        }
-      };
-      
-      webKitRecognition.onspeechend = () => {
-        webKitRecognition.stop();
-        // setRecognition(null);
-      };
-
       webKitRecognition.start();
-
-    //   get analyzer
+      const transcript = await getTranscript(webKitRecognition);
+      console.log(transcript);
     }
   }
+  const getTranscript = (webKitRecognition: SpeechRecognition) => new Promise<string>((resolve) => {
+    webKitRecognition.onresult = (event: any) => {
+      if (event.results.length > 0) {
+        const lastResult = event.results[event.results.length - 1];
+        if (lastResult.isFinal) {
+          resolve(lastResult[0].transcript);
+        }
+      }
+    };
+  });
 
   const stopRecognition = () => {
     if (recognition) {
