@@ -19,7 +19,6 @@ const useChatStream = (setMessages: React.Dispatch<React.SetStateAction<CoreMess
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === "event") {
           let data = event.data;
-          console.log(data)
           setMessages(prevMessages => {
             const lastMessage = prevMessages[prevMessages.length - 1];
             if (lastMessage && lastMessage.role === 'assistant' && typeof data === 'string') { // Check if data is a string
@@ -28,7 +27,6 @@ const useChatStream = (setMessages: React.Dispatch<React.SetStateAction<CoreMess
                 ...lastMessage,
                 content: lastMessage.content + data,
               };
-              console.log(updatedMessages)
               return updatedMessages;
             } else {
               return [...prevMessages, { role: 'assistant', content: data }];

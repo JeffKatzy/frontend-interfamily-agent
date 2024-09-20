@@ -36,6 +36,8 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const startRecognition = async () => {
     if ("webkitSpeechRecognition" in window) {
       const webKitRecognition = new window.webkitSpeechRecognition();
+      webKitRecognition.continuous = true;  // Keeps listening until explicitly stopped
+      webKitRecognition.interimResults = true;
       webKitRecognition.lang = "en-US";
 
       webKitRecognition.start();
@@ -54,6 +56,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     webKitRecognition.onresult = (event: any) => {
       if (event.results.length > 0) {
         const lastResult = event.results[event.results.length - 1];
+        console.log(lastResult[0].transcript)
         if (lastResult.isFinal) {
           resolve(lastResult[0].transcript);
         }
