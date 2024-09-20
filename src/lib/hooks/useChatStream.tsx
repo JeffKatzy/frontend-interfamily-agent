@@ -4,6 +4,7 @@ import { CoreMessage } from 'ai';
 
 const useChatStream = (setMessages: React.Dispatch<React.SetStateAction<CoreMessage[]>>) => {
   const handleStream = useCallback(async (userInput: string) => {
+    
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_FLASK_API_URL}/answer`, {
         headers: { 'Content-Type': 'application/json' },
@@ -18,16 +19,16 @@ const useChatStream = (setMessages: React.Dispatch<React.SetStateAction<CoreMess
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === "event") {
           let data = event.data;
-          if (data.includes('[DONE]')) data = data.replace('[DONE]', '');
-          
+          console.log(data)
           setMessages(prevMessages => {
             const lastMessage = prevMessages[prevMessages.length - 1];
-            if (lastMessage && lastMessage.role === 'assistant') {
+            if (lastMessage && lastMessage.role === 'assistant' && typeof data === 'string') { // Check if data is a string
               const updatedMessages = [...prevMessages];
               updatedMessages[updatedMessages.length - 1] = {
                 ...lastMessage,
                 content: lastMessage.content + data,
               };
+              console.log(updatedMessages)
               return updatedMessages;
             } else {
               return [...prevMessages, { role: 'assistant', content: data }];

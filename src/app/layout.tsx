@@ -40,11 +40,13 @@ export default function RootLayout({
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Header />
         <main className="flex h-100vh flex-1 flex-col">
-        <AudioProvider>
+        
         <ChatProvider>
+        <AudioProvider>
           {children}
-        </ChatProvider>
         </AudioProvider>
+        </ChatProvider>
+        
         </main>
         </ThemeProvider>
       </body>

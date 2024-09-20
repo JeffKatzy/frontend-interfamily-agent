@@ -8,6 +8,7 @@ interface ChatContextType {
   messages: CoreMessage[];
   input: string;
   setInput: (input: string) => void;
+  setMessages: React.Dispatch<React.SetStateAction<CoreMessage[]>>;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   handleKeyDown: (e: React.KeyboardEvent) => Promise<void>;
 }
@@ -17,7 +18,8 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [messages, setMessages] = useState<CoreMessage[]>([]);
   const [input, setInput] = useState<string>('');
-  
+  const handleStream = useChatStream(setMessages)
+
   const handleKeyDown = (e: React.KeyboardEvent): Promise<void> => {
     if (e.key === 'Enter') {
       handleSubmit(e);
@@ -25,8 +27,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return Promise.resolve();
   }
   
-  const handleStream = useChatStream(setMessages)
-
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     const newMessages: CoreMessage[] = [
@@ -40,7 +40,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [input, messages, handleStream]);
 
   return (
-    <ChatContext.Provider value={{ messages, input, setInput, handleSubmit, handleKeyDown }}>
+    <ChatContext.Provider value={{ messages, input, setInput, handleSubmit, handleKeyDown, setMessages }}>
       {children}
     </ChatContext.Provider>
   );

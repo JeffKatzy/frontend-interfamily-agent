@@ -14,13 +14,14 @@ import { useSpeechRecognition } from '@/lib/hooks/recordAudio';
 import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 import { useChat } from './providers/ChatProvider';
 
+import { useRecognition } from './providers/AudioProvider';
 import { EmptyScreen } from '@/components/emptyScreen';
 import { useAudio } from '@/lib/hooks/getAudioPermissions';
 
 export default function Chat() {
   const { messages, input, setInput, handleSubmit, handleKeyDown } = useChat();
-  const { startRecognition } = useSpeechRecognition();
   const { checkWebkitAndMicPermission } = useAudio();
+  const { startRecognition } = useRecognition();
 
   useEffect(() => {
     checkWebkitAndMicPermission();
