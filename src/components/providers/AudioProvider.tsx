@@ -13,6 +13,8 @@ declare global {
 
 interface AudioContextType {
   startRecognition: () => Promise<void>;
+  isRecording: boolean;
+  setIsRecording: (isRecording: boolean) => void;
 }
 
 interface SpeechRecognition {
@@ -27,6 +29,7 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { messages, setMessages } = useChat();
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(
     null
   );
@@ -40,8 +43,12 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       webKitRecognition.interimResults = true;
       webKitRecognition.lang = "en-US";
 
+
       webKitRecognition.start();
+      setIsRecording(true);
       const transcript = await getTranscript(webKitRecognition);
+      setIsRecording(false);
+      console.log('really stopping recognition')
       const newMessages: CoreMessage[] = [
         ...messages,
         { content: transcript, role: 'user' },
@@ -66,13 +73,15 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const stopRecognition = () => {
     if (recognition) {
+      console.log('stopping recognition')
       recognition.stop();
+      setIsRecording(false);
     }
   };
 
 
   return (
-    <AudioContext.Provider value={{ startRecognition }}>
+    <AudioContext.Provider value={{ startRecognition, isRecording, setIsRecording }}>
       {children}
     </AudioContext.Provider>
   );

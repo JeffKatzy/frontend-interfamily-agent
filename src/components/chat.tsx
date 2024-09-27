@@ -21,7 +21,7 @@ import { useAudio } from '@/lib/hooks/getAudioPermissions';
 export default function Chat() {
   const { messages, input, setInput, handleSubmit, handleKeyDown } = useChat();
   const { checkWebkitAndMicPermission } = useAudio();
-  const { startRecognition } = useRecognition();
+  const { startRecognition, isRecording } = useRecognition();
 
   useEffect(() => {
     checkWebkitAndMicPermission();
@@ -56,7 +56,7 @@ export default function Chat() {
               variant="outline" 
               type="button"
               size="icon" 
-              className="absolute right-4 top-[14px] size-10 rounded-full bg-violet-500 hover:bg-violet-600 p-0 sm:right-4"
+              className={`absolute right-4 top-[14px] size-10 rounded-full p-0 sm:right-4 ${isRecording ? 'animate-pulse bg-red-500 hover:bg-red-600' : 'bg-violet-500 hover:bg-violet-600'}`}
               title="Click to start voice input"
               onClick={startRecognition}
             >
