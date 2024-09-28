@@ -1,19 +1,10 @@
 'use client';
 import Textarea from 'react-textarea-autosize'
-import { CIcon } from '@coreui/icons-react';
-import { cilMicrophone } from '@coreui/icons';
-import { type CoreMessage } from 'ai';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { FooterText } from '@/components/footer'
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { IconMic, IconPlus } from '@/components/ui/icons';
-import  Link from "next/link";
-import { useSpeechRecognition } from '@/lib/hooks/recordAudio';
-import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 import { useChat } from './providers/ChatProvider';
-
 import { useRecognition } from './providers/AudioProvider';
 import { EmptyScreen } from '@/components/emptyScreen';
 import { useAudio } from '@/lib/hooks/getAudioPermissions';

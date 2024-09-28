@@ -1,9 +1,5 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/button'
-import { IconSeparator, IconVercel } from '@/components/ui/icons'
-import EnvCard from './cards/envcard'
 import { Button } from '@/components/ui/button'
 
 

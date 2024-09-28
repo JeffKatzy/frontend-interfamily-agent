@@ -1,5 +1,5 @@
 'use client'
-import React, { createContext, useContext, useCallback } from 'react';
+import React, { createContext, useContext } from 'react';
 import { useState, useRef } from "react";
 import useChatStream from "../../../src/lib/hooks/useChatStream";
 import { useChat } from '@/components/providers/ChatProvider';

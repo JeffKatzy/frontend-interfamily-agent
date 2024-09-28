@@ -1,7 +1,6 @@
 'use client'
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { type CoreMessage } from 'ai';
-import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 import useChatStream from '@/lib/hooks/useChatStream'
 
 interface ChatContextType {
