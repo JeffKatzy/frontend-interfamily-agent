@@ -19,23 +19,24 @@ export default function Chat() {
   }, []);
 
   return (    
-    <div className="group w-full overflow-auto ">
+    <div className="group w-full overflow-auto h-full flex flex-col">
       {messages.length <= 0 ? ( 
         <EmptyScreen />  
       ) 
       : (
-        <div className="max-w-xl mx-auto mt-10 mb-24">
+        <div className="max-w-xl mx-auto mt-10 mb-24 flex flex-col">
           {messages.map((message, index) => (
-            <div key={index} className="whitespace-pre-wrap flex mb-5">
+            <div key={index} className="whitespace-pre-wrap mb-5">
               <div className={`${message.role === 'user' ? 'bg-slate-200 ml-auto' : 'bg-transparent'} p-2 rounded-lg`}>
               <ReactMarkdown>{message.content as string}</ReactMarkdown>
               </div>
             </div>
           ))}
+
+          
         </div>
       )}
-      <div className="fixed inset-x-0 bottom-10 w-full ">
-      
+      <div className="inset-x-0 bottom-10 w-full mt-auto">
         <div className="w-full max-w-xl mx-auto">
           <form onSubmit={handleSubmit}>
             <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-zinc-100 px-12 sm:rounded-full sm:px-12">  

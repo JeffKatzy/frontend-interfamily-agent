@@ -21,7 +21,7 @@ const useChatStream = (setMessages: React.Dispatch<React.SetStateAction<CoreMess
           let data = event.data;
           setMessages(prevMessages => {
             const lastMessage = prevMessages[prevMessages.length - 1];
-            if (lastMessage && lastMessage.role === 'assistant' && typeof data === 'string') { // Check if data is a string
+            if (lastMessage && lastMessage.role === 'assistant' && typeof data === 'string') {
               const updatedMessages = [...prevMessages];
               updatedMessages[updatedMessages.length - 1] = {
                 ...lastMessage,
