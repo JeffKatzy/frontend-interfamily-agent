@@ -4,7 +4,6 @@ import { CoreMessage } from 'ai';
 
 const useChatStream = (setMessages: React.Dispatch<React.SetStateAction<CoreMessage[]>>) => {
   const handleStream = useCallback(async (userInput: string) => {
-    
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_FLASK_API_URL}/answer`, {
         headers: { 'Content-Type': 'application/json' },

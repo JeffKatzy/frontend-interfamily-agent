@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useAudio } from '@/lib/hooks/getAudioPermissions';
 
 export function ChatInput() {
-  const { input, setInput, handleSubmit, handleKeyDown } = useChat();
+  const { input, setInput, submitMessage, handleKeyDown } = useChat();
   const { startRecognition, isRecording } = useRecognition();
   const { checkWebkitAndMicPermission } = useAudio();
 
@@ -20,7 +20,7 @@ export function ChatInput() {
     <div className="group w-full overflow-auto h-full flex flex-col">
       <div className="inset-x-0 bottom-10 w-full mt-auto">
         <div className="w-full max-w-xl mx-auto">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={submitMessage}>
             <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-zinc-100 px-12 sm:rounded-full sm:px-12">  
             <Button variant="outline" size="icon" className="absolute left-4 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4">
             <IconPlus />

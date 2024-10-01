@@ -1,13 +1,11 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { AudioProvider } from '@/components/providers/AudioProvider';
+import { ImageProvider } from '@/components/providers/ImageProvider';
 import "./globals.css";
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { cn } from '@/lib/utils'
 import { Header } from "@/components/header";
 import { ThemeProvider } from 'next-themes';
-const inter = Inter({ subsets: ["latin"] });
 import { ChatProvider } from '@/components/providers/ChatProvider';
 
 
@@ -43,7 +41,9 @@ export default function RootLayout({
         
         <ChatProvider>
         <AudioProvider>
-          {children}
+        <ImageProvider>
+            {children}
+        </ImageProvider>
         </AudioProvider>
         </ChatProvider>
         

@@ -8,7 +8,7 @@ interface ChatContextType {
   input: string;
   setInput: (input: string) => void;
   setMessages: React.Dispatch<React.SetStateAction<CoreMessage[]>>;
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  submitMessage: (e: React.FormEvent) => Promise<void>;
   handleKeyDown: (e: React.KeyboardEvent) => Promise<void>;
 }
 
@@ -21,12 +21,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const handleKeyDown = (e: React.KeyboardEvent): Promise<void> => {
     if (e.key === 'Enter') {
-      handleSubmit(e);
+      submitMessage(e);
     }
     return Promise.resolve();
   }
   
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+  const submitMessage = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     const newMessages: CoreMessage[] = [
       ...messages,
@@ -39,7 +39,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [input, messages, handleStream]);
 
   return (
-    <ChatContext.Provider value={{ messages, input, setInput, handleSubmit, handleKeyDown, setMessages }}>
+    <ChatContext.Provider value={{ messages, input, setInput, submitMessage, handleKeyDown, setMessages }}>
       {children}
     </ChatContext.Provider>
   );
