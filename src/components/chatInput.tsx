@@ -17,7 +17,7 @@ export function ChatInput() {
   }, []);
 
   return (    
-    <div className="group w-full overflow-auto h-full flex flex-col">
+    <div className="group w-full flex flex-col">
       <div className="inset-x-0 bottom-10 w-full mt-auto">
         <div className="w-full max-w-xl mx-auto">
           <form onSubmit={submitMessage}>
