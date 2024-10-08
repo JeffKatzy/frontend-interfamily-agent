@@ -1,5 +1,5 @@
 import { AudioProvider } from '@/components/providers/AudioProvider';
-import { ImageProvider } from '@/components/providers/ImageProvider';
+
 import "./globals.css";
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
@@ -41,9 +41,7 @@ export default function RootLayout({
         
         <ChatProvider>
         <AudioProvider>
-        <ImageProvider>
             {children}
-        </ImageProvider>
         </AudioProvider>
         </ChatProvider>
         
