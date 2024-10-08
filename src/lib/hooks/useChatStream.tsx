@@ -5,10 +5,12 @@ import { CoreMessage } from 'ai';
 const useChatStream = (setMessages: React.Dispatch<React.SetStateAction<CoreMessage[]>>) => {
   const handleStream = useCallback(async (userInput: string) => {
     try {
+      const sessionId = sessionStorage.getItem('sessionId');
+      const userId = sessionStorage.getItem('userId');
       const response = await fetch(`${process.env.NEXT_PUBLIC_FLASK_API_URL}/answer`, {
         headers: { 'Content-Type': 'application/json' },
         method: "POST",
-        body: JSON.stringify({ message: userInput }),
+        body: JSON.stringify({ message: userInput, session_id: sessionId, user_id: userId }),
         cache: "no-store",
       });
       if (!response.ok) throw new Error(response.statusText);

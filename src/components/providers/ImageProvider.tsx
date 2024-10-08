@@ -9,7 +9,6 @@ interface CoreImage {
 
 interface ImageContextType {
     images: CoreImage[]; 
-    addImage: (e: React.FormEvent) => Promise<void>;
     addAnotherImage: (e: React.FormEvent) => Promise<void>;
     setImages: React.Dispatch<React.SetStateAction<CoreImage[]>>;
 }
@@ -26,26 +25,7 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
-  const addImage = useCallback(async (e: React.FormEvent) => {
-    const newImages: CoreImage[] = [
-      ...images,
-      { url: '', description: '' },
-    ];
-    const newImage: CoreImage | undefined = await generateImage()
-    console.log('newImage', newImage)
-    if (newImage) {
-      setImages(prevImages => {
-        const lastImage = prevImages[prevImages.length - 1];
-        const updatedImages = [...prevImages];
-        updatedImages[updatedImages.length - 1] = {
-            ...lastImage,
-            url: newImage.url,
-            description: newImage.description
-        };
-          return updatedImages
-      });
-    }
-  }, [images]);
+  
 
   const generateImage = useCallback(async () => {
     try {
@@ -64,7 +44,7 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   return (
-    <ImageContext.Provider value={{ images, addImage, addAnotherImage, setImages }}>
+    <ImageContext.Provider value={{ images, addAnotherImage, setImages }}>
       {children}
     </ImageContext.Provider>
   );

@@ -1,5 +1,8 @@
+"use client";
 import Chat from "@/components/chat";
 import Sidebar from "@/components/sidebar";
+import { useEffect } from "react";
+
 
 export default function Home() {
   return (
